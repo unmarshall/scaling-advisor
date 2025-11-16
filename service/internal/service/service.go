@@ -35,7 +35,7 @@ var _ svcapi.ScalingAdvisorService = (*defaultScalingAdvisor)(nil)
 type defaultScalingAdvisor struct {
 	minKAPIServer     mkapi.Server
 	schedulerLauncher svcapi.SchedulerLauncher
-	generator         *generator.Generator
+	generator         *generator.PlanGenerator
 	cfg               svcapi.ScalingAdvisorServiceConfig
 }
 
@@ -202,13 +202,13 @@ func LaunchApp(ctx context.Context) (app svcapi.App, exitCode int) {
 		return
 	}
 	weightsFn := weights.GetDefaultWeightsFn()
-	nodeScorer, err := scorer.GetNodeScorer(commontypes.LeastCostNodeScoringStrategy, pricingAccess, weightsFn)
+	nodeScorer, err := scorer.GetNodeScorer(commontypes.NodeScoringStrategyLeastCost, pricingAccess, weightsFn)
 	if err != nil {
 		exitCode = commoncli.ExitErrStart
 		return
 	}
 	// TODO: ask meghna whether this can be made an interface and if weightsFn can be passed at construction time.
-	nodeSelector, err := scorer.GetNodeScoreSelector(commontypes.LeastCostNodeScoringStrategy)
+	nodeSelector, err := scorer.GetNodeScoreSelector(commontypes.NodeScoringStrategyLeastCost)
 	if err != nil {
 		exitCode = commoncli.ExitErrStart
 		return

@@ -88,17 +88,17 @@ func TestGenerateBasicScalingAdvice(t *testing.T) {
 	}
 }
 
-func createTestGenerator(ctx context.Context) (*Generator, error) {
+func createTestGenerator(ctx context.Context) (*PlanGenerator, error) {
 	pricingAccess, err := pricingtestutil.GetInstancePricingAccessForTop20AWSInstanceTypes()
 	if err != nil {
 		return nil, err
 	}
 	weightsFn := weights.GetDefaultWeightsFn()
-	nodeScorer, err := scorer.GetNodeScorer(commontypes.LeastCostNodeScoringStrategy, pricingAccess, weightsFn)
+	nodeScorer, err := scorer.GetNodeScorer(commontypes.NodeScoringStrategyLeastCost, pricingAccess, weightsFn)
 	if err != nil {
 		return nil, err
 	}
-	nodeSelector, err := scorer.GetNodeScoreSelector(commontypes.LeastCostNodeScoringStrategy)
+	nodeSelector, err := scorer.GetNodeScoreSelector(commontypes.NodeScoringStrategyLeastCost)
 	if err != nil {
 		return nil, err
 	}
