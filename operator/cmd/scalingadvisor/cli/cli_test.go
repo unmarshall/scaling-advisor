@@ -50,7 +50,7 @@ func TestParseLaunchOptions(t *testing.T) {
 
 func TestLaunchOptions_ValidateAndLoadOperatorConfig(t *testing.T) {
 	tests := []struct {
-		want       *configv1alpha1.ScalingAdvisorConfiguration
+		want       *configv1alpha1.OperatorConfig
 		name       string
 		configFile string
 		wantErr    bool
@@ -58,8 +58,8 @@ func TestLaunchOptions_ValidateAndLoadOperatorConfig(t *testing.T) {
 		{
 			name:       "ShouldLoadMinimalScalingAdvisorConfig",
 			configFile: "testdata/basic-operator-config.yaml",
-			want: updateOperatorConfigWithDefaults(&configv1alpha1.ScalingAdvisorConfiguration{
-				Server: configv1alpha1.ScalingAdvisorServerConfiguration{
+			want: updateOperatorConfigWithDefaults(&configv1alpha1.OperatorConfig{
+				Server: configv1alpha1.ScalingAdvisorServerConfig{
 					ServerConfig: commontypes.ServerConfig{
 						HostPort: commontypes.HostPort{
 							Host: "localhost",
@@ -82,14 +82,14 @@ func TestLaunchOptions_ValidateAndLoadOperatorConfig(t *testing.T) {
 				t.Errorf("LoadAndValidateOperatorConfig() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if diff := cmp.Diff(tt.want, got, cmpopts.IgnoreUnexported(configv1alpha1.ScalingAdvisorConfiguration{})); diff != "" {
+			if diff := cmp.Diff(tt.want, got, cmpopts.IgnoreUnexported(configv1alpha1.OperatorConfig{})); diff != "" {
 				t.Errorf("operator config mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
 }
 
-func updateOperatorConfigWithDefaults(operatorConfig *configv1alpha1.ScalingAdvisorConfiguration) *configv1alpha1.ScalingAdvisorConfiguration {
+func updateOperatorConfigWithDefaults(operatorConfig *configv1alpha1.OperatorConfig) *configv1alpha1.OperatorConfig {
 	configv1alpha1.SetObjectDefaults_ScalingAdvisorConfiguration(operatorConfig)
 	operatorConfig.TypeMeta = metav1.TypeMeta{
 		Kind:       constants.KindScalingAdvisorConfiguration,

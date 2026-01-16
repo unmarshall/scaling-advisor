@@ -10,16 +10,16 @@ import (
 	"github.com/gardener/scaling-advisor/api/common/constants"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/utils/ptr"
 )
 
 const (
 	defaultLeaderElectionResourceLock = "leases"
 	defaultLeaderElectionResourceName = "scalingadvisor-operator-leader-election"
+	defaultConcurrentSyncs            = 2
 )
 
 // SetDefaults_ClientConnectionConfiguration sets defaults for the k8s client connection.
-func SetDefaults_ClientConnectionConfiguration(clientConnConfig *ClientConnectionConfiguration) {
+func SetDefaults_ClientConnectionConfiguration(clientConnConfig *ClientConnectionConfig) {
 	if clientConnConfig.QPS == 0.0 {
 		clientConnConfig.QPS = 100.0
 	}
@@ -29,7 +29,7 @@ func SetDefaults_ClientConnectionConfiguration(clientConnConfig *ClientConnectio
 }
 
 // SetDefaults_LeaderElectionConfiguration sets defaults for the leader election of the scalingadvisor operator.
-func SetDefaults_LeaderElectionConfiguration(leaderElectionConfig *LeaderElectionConfiguration) {
+func SetDefaults_LeaderElectionConfiguration(leaderElectionConfig *LeaderElectionConfig) {
 	zero := metav1.Duration{}
 	if leaderElectionConfig.LeaseDuration == zero {
 		leaderElectionConfig.LeaseDuration = metav1.Duration{Duration: 15 * time.Second}
@@ -48,8 +48,8 @@ func SetDefaults_LeaderElectionConfiguration(leaderElectionConfig *LeaderElectio
 	}
 }
 
-// SetDefaults_ScalingAdvisorServerConfiguration sets defaults for ScalingAdvisorServerConfiguration.
-func SetDefaults_ScalingAdvisorServerConfiguration(serverConfig *ScalingAdvisorServerConfiguration) {
+// SetDefaults_ScalingAdvisorServerConfiguration sets defaults for ScalingAdvisorServerConfig.
+func SetDefaults_ScalingAdvisorServerConfiguration(serverConfig *ScalingAdvisorServerConfig) {
 	if serverConfig.Port == 0 {
 		serverConfig.Port = constants.DefaultOperatorServerPort
 	}
@@ -70,9 +70,9 @@ func SetDefaults_ScalingAdvisorServerConfiguration(serverConfig *ScalingAdvisorS
 	}
 }
 
-// SetDefaults_ScalingConstraintsControllerConfiguration sets defaults for the ScalingConstraintsControllerConfiguration.
-func SetDefaults_ScalingConstraintsControllerConfiguration(scalingConstraintsConfig *ScalingConstraintsControllerConfiguration) {
-	if scalingConstraintsConfig.ConcurrentSyncs == nil {
-		scalingConstraintsConfig.ConcurrentSyncs = ptr.To(1)
+// SetDefaults_ScalingConstraintsControllerConfiguration sets defaults for the ScalingConstraintsControllerConfig.
+func SetDefaults_ScalingConstraintsControllerConfiguration(scalingConstraintsConfig *ScalingConstraintsControllerConfig) {
+	if scalingConstraintsConfig.ConcurrentSyncs <= 0 {
+		scalingConstraintsConfig.ConcurrentSyncs = defaultConcurrentSyncs
 	}
 }

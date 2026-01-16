@@ -23,7 +23,7 @@ import (
 )
 
 // CreateManagerAndRegisterControllers creates a controller manager and registers all controllers.
-func CreateManagerAndRegisterControllers(log logr.Logger, saCfg *configv1alpha1.ScalingAdvisorConfiguration) (ctrl.Manager, error) {
+func CreateManagerAndRegisterControllers(log logr.Logger, saCfg *configv1alpha1.OperatorConfig) (ctrl.Manager, error) {
 	mgrOpts, err := createManagerOptions(log, saCfg)
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func CreateManagerAndRegisterControllers(log logr.Logger, saCfg *configv1alpha1.
 	return mgr, nil
 }
 
-func createManagerOptions(log logr.Logger, saCfg *configv1alpha1.ScalingAdvisorConfiguration) (ctrl.Options, error) {
+func createManagerOptions(log logr.Logger, saCfg *configv1alpha1.OperatorConfig) (ctrl.Options, error) {
 	scheme, err := createScalingAdvisorScheme()
 	if err != nil {
 		return ctrl.Options{}, err
@@ -67,7 +67,7 @@ func createManagerOptions(log logr.Logger, saCfg *configv1alpha1.ScalingAdvisorC
 	return opts, nil
 }
 
-func getRestConfig(operatorCfg *configv1alpha1.ScalingAdvisorConfiguration) *rest.Config {
+func getRestConfig(operatorCfg *configv1alpha1.OperatorConfig) *rest.Config {
 	restCfg := ctrl.GetConfigOrDie()
 	if operatorCfg != nil {
 		restCfg.Burst = operatorCfg.ClientConnection.Burst
@@ -91,7 +91,7 @@ func createScalingAdvisorScheme() (*runtime.Scheme, error) {
 	return scheme, nil
 }
 
-func registerControllers(mgr ctrl.Manager, controllersConfig configv1alpha1.ControllersConfiguration) error {
+func registerControllers(mgr ctrl.Manager, controllersConfig configv1alpha1.ControllersConfig) error {
 	scalingConstraintsController := scalingconstraints.NewReconciler(mgr, controllersConfig.ScalingConstraints)
 	return scalingConstraintsController.SetupWithManager(mgr)
 }

@@ -43,8 +43,7 @@ var (
 
 // MapServerConfigFlags adds the constants flags to the passed FlagSet.
 func MapServerConfigFlags(flagSet *pflag.FlagSet, opts *commontypes.ServerConfig) {
-	flagSet.StringVarP(&opts.Host, "host", "H", "", "host name to bind this service. Use 0.0.0.0 for all interfaces")
-	flagSet.IntVarP(&opts.Port, "port", "P", opts.Port, "listen port for REST API")
+	flagSet.StringVar(&opts.BindAddress, "bind-address", "", "bind address of the form <host>:<port>")
 	flagSet.BoolVarP(&opts.ProfilingEnabled, "pprof", "p", false, "enable pprof profiling")
 	flagSet.DurationVar(&opts.GracefulShutdownTimeout.Duration, "shutdown-timeout", time.Second*6, "graceful shutdown timeout")
 

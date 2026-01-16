@@ -4,6 +4,11 @@
 
 package constants
 
+import (
+	"net"
+	"strconv"
+)
+
 const (
 	// OperatorName is the name of the scalingadvisor operator.
 	OperatorName = "scalingadvisor"
@@ -61,6 +66,11 @@ const (
 	DefaultAdvisorServicePort = 8090
 	// DefaultMinKAPIPort is the default port for the MinKAPI core.
 	DefaultMinKAPIPort = 8091
+)
+
+var (
+	// DefaultMinKAPIBindAddress is the default bind address for the MinKAPI server.
+	DefaultMinKAPIBindAddress = net.JoinHostPort("", strconv.Itoa(DefaultMinKAPIPort))
 )
 
 // ContextKey is the type alias for scaling advisor related context keys

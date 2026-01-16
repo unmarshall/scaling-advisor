@@ -8,7 +8,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -62,9 +64,9 @@ func LaunchApp(ctx context.Context) (app minkapi.App, exitCode int) {
 		exitCode = commoncli.ExitErrParseOpts
 		return
 	}
-	app.Server, err = server.NewDefaultInMemory(ctx, cliOpts.Config)
+	app.Server, err = server.New(ctx, cliOpts.Config)
 	if err != nil {
-		log.Error(err, "failed to initialize InMemoryKAPI")
+		log.Error(err, "failed to initialize InMemServer")
 		exitCode = commoncli.ExitErrStart
 		return
 	}
@@ -107,8 +109,8 @@ func setupFlagsToOpts() (*pflag.FlagSet, *Opts) {
 	if opts.KubeConfigPath == "" {
 		opts.KubeConfigPath = minkapi.DefaultKubeConfigPath
 	}
-	if opts.Port == 0 {
-		opts.Port = commonconstants.DefaultMinKAPIPort
+	if len(opts.BindAddress) == 0 {
+		opts.BindAddress = net.JoinHostPort("", strconv.Itoa(commonconstants.DefaultMinKAPIPort))
 	}
 	// TODO: Change opts.KubeConfigPath to opts.KubeConfigGenDir later
 	flagSet.StringVarP(&opts.KubeConfigPath, clientcmd.RecommendedConfigPathFlag, "k", opts.KubeConfigPath, "path to master kubeconfig - fallback to KUBECONFIG env-var")

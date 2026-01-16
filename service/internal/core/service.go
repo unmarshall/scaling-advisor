@@ -44,7 +44,7 @@ func NewService(ctx context.Context,
 		}
 	}()
 	setServiceConfigDefaults(&config)
-	minKAPIServer, err := mkcore.NewDefaultInMemory(ctx, config.MinKAPIConfig)
+	minKAPIServer, err := mkcore.New(ctx, config.MinKAPIConfig)
 	if err != nil {
 		return
 	}
